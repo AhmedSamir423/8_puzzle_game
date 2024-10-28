@@ -1,5 +1,5 @@
 import random
-
+import heapq
 
 goal_State = [[0,1,2], [3,4,5], [6,7,8]]
 class State:
@@ -44,13 +44,16 @@ class State:
         return self.board == other.board
 
 class Node:
-    def __init__(self, state, parent=None, action=None, cost=0, depth=0):
+    def __init__(self, state, parent=None, action=None, cost=0, depth=0, heuristic=0):
         self.state = state
         self.parent = parent
         self.action = action  # Store move name here (up, down, left, right)
-        self.cost = cost
+        self.cost = cost # g(n)
         self.depth = depth
+        self.heuristic = heuristic  # h(n)
 
+    def total_cost(self):
+        return self.cost + self.heuristic # f(n) = g(n) + h(n)
     def get_path(self):
         path = []
         current_node = self
@@ -146,6 +149,7 @@ def eclidean_heuristic(state):
                 distance += ((i - goal_row) ** 2 + (j - goal_col) ** 2) ** 0.5
     return distance
 
+def 
 def is_solvable(board):
     # Flatten the board and count inversions
     flat_board = [num for row in board for num in row if num != 0]
@@ -160,7 +164,7 @@ def generate_initial_board():
         if is_solvable(board):
             return board
 
-# In your search functions, adjust cost handling as suggested
+
 
 
 # Test Code
