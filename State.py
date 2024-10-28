@@ -1,5 +1,7 @@
-goal_State = [[7,2,4], [5,0,6], [8,3,1]]
+import random
 
+
+goal_State = [[0,1,2], [3,4,5], [6,7,8]]
 class State:
     def __init__(self, board):
         self.board = board
@@ -144,10 +146,29 @@ def eclidean_heuristic(state):
                 distance += ((i - goal_row) ** 2 + (j - goal_col) ** 2) ** 0.5
     return distance
 
+def is_solvable(board):
+    # Flatten the board and count inversions
+    flat_board = [num for row in board for num in row if num != 0]
+    inversions = sum(1 for i in range(len(flat_board)) for j in range(i + 1, len(flat_board)) if flat_board[i] > flat_board[j])
+    return inversions % 2 == 0
+
+def generate_initial_board():
+    while True:
+        numbers = list(range(9))
+        random.shuffle(numbers)
+        board = [numbers[i:i+3] for i in range(0, 9, 3)]
+        if is_solvable(board):
+            return board
+
+# In your search functions, adjust cost handling as suggested
+
 
 # Test Code
-initial_board = [[1, 2, 3], [4, 0, 5], [7, 8, 6]]
+initial_board = generate_initial_board()
 initial_state = State(initial_board)
+print("Initial Board:")
+for row in initial_board:
+    print(row)
 
 # Run searches and print paths
 solution_path_bfs = bfs(initial_state)
