@@ -1,6 +1,6 @@
 import random
 import heapq
-
+import math
 goal_State = [[0,1,2], [3,4,5], [6,7,8]]
 class State:
     def __init__(self, board):
@@ -62,7 +62,8 @@ class Node:
             current_node = current_node.parent
         path.reverse()  # Reverse to get actions from start to goal
         return path
-
+    def __lt__(self, other):
+        return self.total_cost() < other.total_cost()
 def bfs(initial_state):
     queue = [Node(initial_state)]
     visited = set()
@@ -134,8 +135,8 @@ def manhattan_heuristic(state):
     for i in range(3):
         for j in range(3):
             if state.board[i][j] != 0:
-                goal_row = (state.board[i][j] - 1) // 3
-                goal_col = (state.board[i][j] - 1) % 3
+                goal_row = (state.board[i][j]) // 3
+                goal_col = (state.board[i][j]) % 3
                 distance += abs(i - goal_row) + abs(j - goal_col)
     return distance
 
@@ -144,11 +145,10 @@ def eclidean_heuristic(state):
     for i in range(3):
         for j in range(3):
             if state.board[i][j] != 0:
-                goal_row = (state.board[i][j] - 1) // 3
-                goal_col = (state.board[i][j] - 1) % 3
-                distance += ((i - goal_row) ** 2 + (j - goal_col) ** 2) ** 0.5
+                goal_row = (state.board[i][j]) // 3
+                goal_col = (state.board[i][j]) % 3
+                distance += math.sqrt((i - goal_row) ** 2 + (j - goal_col) ** 2) 
     return distance
-
 def a_star(initial_state, heuristic):
     open_list = []
     closed_list = set()
@@ -224,10 +224,22 @@ if solution_path_dfs:
 #    print("DFS Solution found! Moves:", solution_path_dfs)
     print("DFS number of moves:", len(solution_path_dfs))
 else:
-   print("DFS: No solution found.")
+    print("DFS: No solution found.")
 
 if solution_path_ids:
     print("IDFS Solution found! Moves:", solution_path_ids)
     print("IDFS number of moves:", len(solution_path_ids))
 else:
     print("IDFS: No solution found.")
+
+if solution_path_a_star_manhattan:
+    print("A* with Manhattan heuristic Solution found! Moves:", solution_path_a_star_manhattan)
+    print("A* Manhattan number of moves:", len(solution_path_a_star_manhattan))
+else:
+    print("A* with Manhattan heuristic: No solution found.")
+
+if solution_path_a_star_euclidean:
+    print("A* with Euclidean heuristic Solution found! Moves:", solution_path_a_star_euclidean)
+    print("A* Euclidean number of moves:", len(solution_path_a_star_euclidean))
+else:
+    print("A* with Euclidean heuristic: No solution found.")
