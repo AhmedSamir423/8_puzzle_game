@@ -149,12 +149,44 @@ def eclidean_heuristic(state):
                 distance += ((i - goal_row) ** 2 + (j - goal_col) ** 2) ** 0.5
     return distance
 
-def 
+def a_star(initial_state, heuristic):
+    open_list = []
+    closed_list = set()
+    start_node = Node(initial_state)
+    heapq.heappush(open_list, (start_node.total_cost(), start_node))
+
+    while open_list:
+        current_node = heapq.heappop(open_list)[1]
+        current_state = current_node.state
+
+        if current_state.is_goal():
+            return current_node.get_path()
+
+        closed_list.add(current_state)
+
+        for move in current_state.get_possible_moves():
+            new_state, move_name = current_state.apply_move(move)
+            if new_state in closed_list:
+                continue
+
+            new_cost = current_node.cost + 1  # Assuming cost of 1 for each move
+            new_heuristic = heuristic(new_state)
+            new_node = Node(new_state, current_node, move_name, new_cost, current_node.depth + 1, new_heuristic)
+
+            # Check if new state is already in open list with a higher f_score
+            if any(new_state == node[1].state and new_node.total_cost() >= node[0] for node in open_list):
+                continue
+
+            heapq.heappush(open_list, (new_node.total_cost(), new_node))
+
+    return None
+
 def is_solvable(board):
     # Flatten the board and count inversions
     flat_board = [num for row in board for num in row if num != 0]
     inversions = sum(1 for i in range(len(flat_board)) for j in range(i + 1, len(flat_board)) if flat_board[i] > flat_board[j])
     return inversions % 2 == 0
+
 
 def generate_initial_board():
     while True:
@@ -178,6 +210,8 @@ for row in initial_board:
 solution_path_bfs = bfs(initial_state)
 solution_path_dfs = dfs(initial_state)
 solution_path_ids = ids(initial_state)
+solution_path_a_star_manhattan = a_star(initial_state, manhattan_heuristic)
+solution_path_a_star_euclidean = a_star(initial_state, eclidean_heuristic)
 
 # Print the solution paths
 if solution_path_bfs:
