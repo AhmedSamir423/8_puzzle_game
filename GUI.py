@@ -15,7 +15,7 @@ class PuzzleGUI:
         self.create_grid()
         self.create_buttons()
         self.generate_new_board()
-        self.generate_initial_state()
+        #self.generate_initial_state()
 
 
     def generate_initial_state(self):
@@ -36,11 +36,11 @@ class PuzzleGUI:
         # Buttons for solving algorithms
         tk.Button(self.master, text="Solve with A* (Manhattan)", command=self.solve_a_star_manhattan).grid(row=3, column=0, columnspan=3)
         tk.Button(self.master, text="Solve with A* (Euclidean)", command=self.solve_a_star_euclidean).grid(row=4, column=0, columnspan=3)
-        tk.Button(self.master, text="Solve with BFS", command=self.solve_bfs).grid(row=4, column=0, columnspan=3)
-        tk.Button(self.master, text="Solve with DFS", command=self.solve_dfs).grid(row=5, column=0, columnspan=3)
-        tk.Button(self.master, text="Solve with IDFS", command=self.solve_ids).grid(row=6, column=0, columnspan=3)
-        tk.Button(self.master, text="Generate New Board", command=self.generate_new_board).grid(row=7, column=0, columnspan=3)
-        tk.Button(self.master, text="Exit", command=self.master.quit).grid(row=8, column=0, columnspan=3)
+        tk.Button(self.master, text="Solve with BFS", command=self.solve_bfs).grid(row=5, column=0, columnspan=3)
+        tk.Button(self.master, text="Solve with DFS", command=self.solve_dfs).grid(row=6, column=0, columnspan=3)
+        tk.Button(self.master, text="Solve with IDFS", command=self.solve_ids).grid(row=7, column=0, columnspan=3)
+        tk.Button(self.master, text="Generate New Board", command=self.generate_new_board).grid(row=8, column=0, columnspan=3)
+        tk.Button(self.master, text="Exit", command=self.master.quit).grid(row=9, column=0, columnspan=3)
     
 
     def generate_new_board(self):
@@ -63,9 +63,19 @@ class PuzzleGUI:
             # Reset the current state to the initial state for displaying the solution
             current_state = self.current_state
             
-            for move in path:
+            for action in path:
                 # Apply each move to the current state and update the grid
-                current_state, _ = current_state.apply_move(move)
+                if(action=="up"):
+                    move= ((-1, 0), action)
+                elif(action=="down"):
+                   move=((1, 0), action)
+                elif(action=="right"):
+                   move=((0, 1), action)
+                elif(action=="left"):
+                   move=((0, -1), action)
+
+                self.current_state, _ =current_state.apply_move(move)
+                current_state = self.current_state
                 self.update_grid()  # Update the GUI grid with the current state
                 self.master.update()  # Refresh the GUI
                 self.master.after(500)  # Delay for 500 ms between moves
