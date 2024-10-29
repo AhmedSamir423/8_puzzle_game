@@ -1,6 +1,7 @@
 import random
 import heapq
 import math
+import time
 goal_State = [[0,1,2], [3,4,5], [6,7,8]]
 class State:
     def __init__(self, board):
@@ -64,15 +65,21 @@ class Node:
         return path
     def __lt__(self, other):
         return self.total_cost() < other.total_cost()
-def bfs(initial_state):
+
+def bfs_with_metrics(initial_state):
+    start_time = time.time()
     queue = [Node(initial_state)]
     visited = set()
+    nodes_expanded = 0
 
     while queue:
         current_node = queue.pop(0)
         current_state = current_node.state
+        nodes_expanded += 1
 
         if current_state.is_goal():
+            end_time = time.time()
+            print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
             return current_node.get_path()
 
         visited.add(current_state)
@@ -82,17 +89,25 @@ def bfs(initial_state):
             if new_state not in visited:
                 queue.append(Node(new_state, current_node, move_name, current_node.cost, current_node.depth + 1))
 
+    end_time = time.time()
+    print_metrics(None, nodes_expanded, 0, start_time, end_time)
     return None
 
-def dfs(initial_state):
+
+def dfs_with_metrics(initial_state):
+    start_time = time.time()
     stack = [Node(initial_state)]
     visited = set()
+    nodes_expanded = 0
 
     while stack:
         current_node = stack.pop()
         current_state = current_node.state
+        nodes_expanded += 1
 
         if current_state.is_goal():
+            end_time = time.time()
+            print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
             return current_node.get_path()
 
         visited.add(current_state)
@@ -102,10 +117,15 @@ def dfs(initial_state):
             if new_state not in visited:
                 stack.append(Node(new_state, current_node, move_name, current_node.cost, current_node.depth + 1))
 
+    end_time = time.time()
+    print_metrics(None, nodes_expanded, 0, start_time, end_time)
     return None
 
-def ids(initial_state):
+
+def ids_with_metrics(initial_state):
+    start_time = time.time()
     depth_limit = 0
+    nodes_expanded = 0
 
     while True:
         stack = [Node(initial_state)]
@@ -115,9 +135,11 @@ def ids(initial_state):
         while stack:
             current_node = stack.pop()
             current_state = current_node.state
+            nodes_expanded += 1
 
             if current_state.is_goal():
-                found_solution = True
+                end_time = time.time()
+                print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
                 return current_node.get_path()
 
             visited.add(current_state)
@@ -149,17 +171,22 @@ def eclidean_heuristic(state):
                 goal_col = (state.board[i][j]) % 3
                 distance += math.sqrt((i - goal_row) ** 2 + (j - goal_col) ** 2) 
     return distance
-def a_star(initial_state, heuristic):
+def a_star_with_metrics(initial_state, heuristic):
+    start_time = time.time()
     open_list = []
     closed_list = set()
     start_node = Node(initial_state)
     heapq.heappush(open_list, (start_node.total_cost(), start_node))
+    nodes_expanded = 0
 
     while open_list:
         current_node = heapq.heappop(open_list)[1]
         current_state = current_node.state
+        nodes_expanded += 1
 
         if current_state.is_goal():
+            end_time = time.time()
+            print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
             return current_node.get_path()
 
         closed_list.add(current_state)
@@ -179,6 +206,8 @@ def a_star(initial_state, heuristic):
 
             heapq.heappush(open_list, (new_node.total_cost(), new_node))
 
+    end_time = time.time()
+    print_metrics(None, nodes_expanded, 0, start_time, end_time)
     return None
 
 def is_solvable(board):
@@ -196,50 +225,83 @@ def generate_initial_board():
         if is_solvable(board):
             return board
 
+def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
+    if path is not None:
+        print("Path to goal:", path)
+        print("Cost of path:", len(path))
+        print("Nodes expanded:", nodes_expanded)
+        print("Search depth:", search_depth)
+        print("Running time:", end_time - start_time, "seconds")
+    else:
+        print("No solution found.")
+        print("Nodes expanded:", nodes_expanded)
+        print("Running time:", end_time - start_time, "seconds")
 
-
-
-# Test Code
 initial_board = generate_initial_board()
 initial_state = State(initial_board)
 print("Initial Board:")
 for row in initial_board:
     print(row)
 
-# Run searches and print paths
-solution_path_bfs = bfs(initial_state)
-solution_path_dfs = dfs(initial_state)
-solution_path_ids = ids(initial_state)
-solution_path_a_star_manhattan = a_star(initial_state, manhattan_heuristic)
-solution_path_a_star_euclidean = a_star(initial_state, eclidean_heuristic)
+# Run searches with metrics
+print("\nBFS:")
+bfs_with_metrics(initial_state)
 
-# Print the solution paths
-if solution_path_bfs:
-    print("BFS Solution found! Moves:", solution_path_bfs)
-    print("BFS number of moves:", len(solution_path_bfs))
-else:
-    print("BFS: No solution found.")
+print("\nDFS:")
+dfs_with_metrics(initial_state)
 
-if solution_path_dfs:
-#    print("DFS Solution found! Moves:", solution_path_dfs)
-    print("DFS number of moves:", len(solution_path_dfs))
-else:
-    print("DFS: No solution found.")
+print("\nIDFS:")
+ids_with_metrics(initial_state)
 
-if solution_path_ids:
-    print("IDFS Solution found! Moves:", solution_path_ids)
-    print("IDFS number of moves:", len(solution_path_ids))
-else:
-    print("IDFS: No solution found.")
+print("\nA* with Manhattan Heuristic:")
+a_star_with_metrics(initial_state, manhattan_heuristic)
 
-if solution_path_a_star_manhattan:
-    print("A* with Manhattan heuristic Solution found! Moves:", solution_path_a_star_manhattan)
-    print("A* Manhattan number of moves:", len(solution_path_a_star_manhattan))
-else:
-    print("A* with Manhattan heuristic: No solution found.")
+print("\nA* with Euclidean Heuristic:")
+a_star_with_metrics(initial_state, eclidean_heuristic)        
 
-if solution_path_a_star_euclidean:
-    print("A* with Euclidean heuristic Solution found! Moves:", solution_path_a_star_euclidean)
-    print("A* Euclidean number of moves:", len(solution_path_a_star_euclidean))
-else:
-    print("A* with Euclidean heuristic: No solution found.")
+
+
+# # Test Code
+# initial_board = generate_initial_board()
+# initial_state = State(initial_board)
+# print("Initial Board:")
+# for row in initial_board:
+#     print(row)
+
+# # Run searches and print paths
+# solution_path_bfs =  bfs_with_metrics(initial_state)
+# solution_path_dfs = dfs_with_metrics(initial_state)
+# solution_path_ids = ids_with_metrics(initial_state)
+# solution_path_a_star_manhattan = a_star_with_metrics(initial_state, manhattan_heuristic)
+# solution_path_a_star_euclidean =  a_star_with_metrics(initial_state, eclidean_heuristic)
+
+# # Print the solution paths
+# if solution_path_bfs:
+#     print("BFS Solution found! Moves:", solution_path_bfs)
+#     print("BFS number of moves:", len(solution_path_bfs))
+# else:
+#     print("BFS: No solution found.")
+
+# # if solution_path_dfs:
+# # #    print("DFS Solution found! Moves:", solution_path_dfs)
+# #     print("DFS number of moves:", len(solution_path_dfs))
+# # else:
+# #     print("DFS: No solution found.")
+
+# # if solution_path_ids:
+# #     print("IDFS Solution found! Moves:", solution_path_ids)
+# #     print("IDFS number of moves:", len(solution_path_ids))
+# # else:
+# #     print("IDFS: No solution found.")
+
+# # if solution_path_a_star_manhattan:
+# #     print("A* with Manhattan heuristic Solution found! Moves:", solution_path_a_star_manhattan)
+# #     print("A* Manhattan number of moves:", len(solution_path_a_star_manhattan))
+# # else:
+# #     print("A* with Manhattan heuristic: No solution found.")
+
+# # if solution_path_a_star_euclidean:
+# #     print("A* with Euclidean heuristic Solution found! Moves:", solution_path_a_star_euclidean)
+# #     print("A* Euclidean number of moves:", len(solution_path_a_star_euclidean))
+# # else:
+# #     print("A* with Euclidean heuristic: No solution found.")
