@@ -243,21 +243,21 @@ print("Initial Board:")
 for row in initial_board:
     print(row)
 
-# Run searches with metrics
-print("\nBFS:")
-bfs_with_metrics(initial_state)
+# # Run searches with metrics
+# print("\nBFS:")
+# bfs_with_metrics(initial_state)
 
-print("\nDFS:")
-dfs_with_metrics(initial_state)
+# print("\nDFS:")
+# dfs_with_metrics(initial_state)
 
-print("\nIDFS:")
-ids_with_metrics(initial_state)
+# print("\nIDFS:")
+# ids_with_metrics(initial_state)
 
-print("\nA* with Manhattan Heuristic:")
-a_star_with_metrics(initial_state, manhattan_heuristic)
+# print("\nA* with Manhattan Heuristic:")
+# a_star_with_metrics(initial_state, manhattan_heuristic)
 
-print("\nA* with Euclidean Heuristic:")
-a_star_with_metrics(initial_state, eclidean_heuristic)        
+# print("\nA* with Euclidean Heuristic:")
+# a_star_with_metrics(initial_state, eclidean_heuristic)        
 
 
 
