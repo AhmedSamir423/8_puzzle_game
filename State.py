@@ -80,7 +80,7 @@ def bfs_with_metrics(initial_state):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path()
+            return current_node.get_path(),current_node.cost
 
         visited.add(current_state)
 
@@ -108,7 +108,7 @@ def dfs_with_metrics(initial_state):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path()
+            return current_node.get_path(),current_node.cost
 
         visited.add(current_state)
 
@@ -140,7 +140,7 @@ def ids_with_metrics(initial_state):
             if current_state.is_goal():
                 end_time = time.time()
                 print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-                return current_node.get_path()
+                return current_node.get_path(),current_node.cost
 
             visited.add(current_state)
 
@@ -187,7 +187,7 @@ def a_star_with_metrics(initial_state, heuristic):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path()
+            return current_node.get_path(),current_node.cost
 
         closed_list.add(current_state)
 
@@ -237,11 +237,11 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
         print("Nodes expanded:", nodes_expanded)
         print("Running time:", end_time - start_time, "seconds")
 
-initial_board = generate_initial_board()
-initial_state = State(initial_board)
-print("Initial Board:")
-for row in initial_board:
-    print(row)
+#initial_board = generate_initial_board()
+#initial_state = State(initial_board)
+#print("Initial Board:")
+#for row in initial_board:
+#   print(row)
 
 # # Run searches with metrics
 # print("\nBFS:")
