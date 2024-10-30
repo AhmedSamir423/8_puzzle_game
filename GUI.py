@@ -68,11 +68,11 @@ class PuzzleGUI:
                 if(action=="up"):
                     move= ((-1, 0), action)
                 elif(action=="down"):
-                   move=((1, 0), action)
+                    move=((1, 0), action)
                 elif(action=="right"):
-                   move=((0, 1), action)
+                    move=((0, 1), action)
                 elif(action=="left"):
-                   move=((0, -1), action)
+                    move=((0, -1), action)
 
                 self.current_state, _ =current_state.apply_move(move)
                 current_state = self.current_state

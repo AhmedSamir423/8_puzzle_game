@@ -2,6 +2,7 @@ import random
 import heapq
 import math
 import time
+import matplotlib.pyplot as plt
 goal_State = [[0,1,2], [3,4,5], [6,7,8]]
 class State:
     def __init__(self, board):
@@ -80,7 +81,7 @@ def bfs_with_metrics(initial_state):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path(),current_node.cost
+            return current_node.get_path()
 
         visited.add(current_state)
 
@@ -108,7 +109,7 @@ def dfs_with_metrics(initial_state):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path(),current_node.cost
+            return current_node.get_path()
 
         visited.add(current_state)
 
@@ -140,7 +141,7 @@ def ids_with_metrics(initial_state):
             if current_state.is_goal():
                 end_time = time.time()
                 print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-                return current_node.get_path(),current_node.cost
+                return current_node.get_path()
 
             visited.add(current_state)
 
@@ -187,7 +188,7 @@ def a_star_with_metrics(initial_state, heuristic):
         if current_state.is_goal():
             end_time = time.time()
             print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
-            return current_node.get_path(),current_node.cost
+            return current_node.get_path()
 
         closed_list.add(current_state)
 
@@ -224,8 +225,11 @@ def generate_initial_board():
         board = [numbers[i:i+3] for i in range(0, 9, 3)]
         if is_solvable(board):
             return board
-
+        
 running_times = []
+nodes_expanded_list = []
+search_depths = []
+cost_of_path_list = []
 
 def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
     running_time = end_time - start_time
@@ -234,34 +238,77 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
         print("Cost of path:", len(path))
         print("Nodes expanded:", nodes_expanded)
         print("Search depth:", search_depth)
-        print("Running time:", end_time - start_time, "seconds")
+        print("Running time:", running_time, "seconds")
     else:
         print("No solution found.")
         print("Nodes expanded:", nodes_expanded)
-        print("Running time:", end_time - start_time, "seconds")
-    running_times.append(running_time)  
+        print("Running time:",running_time, "seconds")
+    
+    running_times.append(running_time)
+    nodes_expanded_list.append(nodes_expanded)  
+    search_depths.append(search_depth)
+    cost_of_path_list.append(len(path))
 
-#initial_board = generate_initial_board()
-#initial_state = State(initial_board)
-#print("Initial Board:")
-#for row in initial_board:
-#   print(row)
 
-# # Run searches with metrics
-# print("\nBFS:")
-# bfs_with_metrics(initial_state)
+        
 
-# print("\nDFS:")
-# dfs_with_metrics(initial_state)
+initial_board = generate_initial_board()
+initial_state = State(initial_board)
+print("Initial Board:")
+for row in initial_board:
+    print(row)
 
-# print("\nIDFS:")
-# ids_with_metrics(initial_state)
+# Run searches with metrics
+print("\nDFS:")
+dfs_with_metrics(initial_state)
 
-# print("\nA* with Manhattan Heuristic:")
-# a_star_with_metrics(initial_state, manhattan_heuristic)
+print("\nBFS:")
+bfs_with_metrics(initial_state)
 
-# print("\nA* with Euclidean Heuristic:")
-# a_star_with_metrics(initial_state, eclidean_heuristic)        
+
+
+print("\nIDFS:")
+ids_with_metrics(initial_state)
+
+print("\nA* with Manhattan Heuristic:")
+a_star_with_metrics(initial_state, manhattan_heuristic)
+
+print("\nA* with Euclidean Heuristic:")
+a_star_with_metrics(initial_state, eclidean_heuristic)  
+
+algorithms = ["DFS", "BFS", "IDFS", "A* (Manhattan)", "A* (Euclidean)"]
+
+# Plotting the running times
+plt.figure(figsize=(10, 6))
+plt.bar(algorithms, running_times, color='skyblue')
+plt.xlabel("Search Algorithms")
+plt.ylabel("Running Time (seconds)")
+plt.title("Running Time Comparison of Search Algorithms")
+plt.show()
+
+# Plotting the number of nodes expanded
+plt.figure(figsize=(10, 6))
+plt.bar(algorithms, nodes_expanded_list, color='lightcoral')
+plt.xlabel("Search Algorithms")
+plt.ylabel("Number of Nodes Expanded")
+plt.title("Number of Nodes Expanded Comparison of Search Algorithms")
+plt.show()
+
+# Plotting the search depths
+plt.figure(figsize=(10, 6))
+plt.bar(algorithms, search_depths, color='lightgreen')
+plt.xlabel("Search Algorithms")
+plt.ylabel("Search Depth")
+plt.title("Search Depth Comparison of Search Algorithms")
+plt.show()
+
+# Plotting the cost of the path
+plt.figure(figsize=(10, 6))
+plt.bar(algorithms, cost_of_path_list, color='lightcoral')
+plt.xlabel("Search Algorithms")
+plt.ylabel("Cost of Path")
+plt.title("Cost of Path Comparison of Search Algorithms")
+plt.show()
 
 
 
