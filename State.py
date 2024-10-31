@@ -99,15 +99,20 @@ def dfs_with_metrics(initial_state):
     stack = [Node(initial_state)]
     visited = set()
     nodes_expanded = 0
+    dfsdepth = 0  # Initialize dfsdepth
 
     while stack:
         current_node = stack.pop()
         current_state = current_node.state
         nodes_expanded += 1
 
+        # Update max_depth if the current node's depth is greater
+        if current_node.depth > dfsdepth:
+            dfsdepth = current_node.depth
+
         if current_state.is_goal():
             end_time = time.time()
-            print_metrics(current_node.get_path(), nodes_expanded, current_node.depth, start_time, end_time)
+            print_metrics(current_node.get_path(), nodes_expanded, dfsdepth, start_time, end_time)
             return current_node.get_path(),current_node.cost
 
         visited.add(current_state)
@@ -118,7 +123,7 @@ def dfs_with_metrics(initial_state):
                 stack.append(Node(new_state, current_node, move_name, current_node.cost, current_node.depth + 1))
 
     end_time = time.time()
-    print_metrics(None, nodes_expanded, 0, start_time, end_time)
+    print_metrics(None, nodes_expanded, dfsdepth, start_time, end_time)
     return None
 
 
@@ -225,10 +230,7 @@ def generate_initial_board():
         if is_solvable(board):
             return board
 
-running_times = []
-
 def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
-    running_time = end_time - start_time
     if path is not None:
         print("Path to goal:", path)
         print("Cost of path:", len(path))
@@ -239,13 +241,12 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
         print("No solution found.")
         print("Nodes expanded:", nodes_expanded)
         print("Running time:", end_time - start_time, "seconds")
-    running_times.append(running_time)  
 
 #initial_board = generate_initial_board()
 #initial_state = State(initial_board)
 #print("Initial Board:")
 #for row in initial_board:
-#   print(row)
+ #   print(row)
 
 # # Run searches with metrics
 # print("\nBFS:")
