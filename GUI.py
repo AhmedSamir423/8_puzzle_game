@@ -57,7 +57,7 @@ class PuzzleGUI:
 
     def display_solution(self, path, algorithm_name):
         if path is not None:
-            print(f"Solution Path using {algorithm_name}: {path}")
+           # print(f"Solution Path using {algorithm_name}: {path}")
             print(f"Number of Moves: {len(path)}")
             
             # Reset the current state to the initial state for displaying the solution
@@ -68,11 +68,11 @@ class PuzzleGUI:
                 if(action=="up"):
                     move= ((-1, 0), action)
                 elif(action=="down"):
-                    move=((1, 0), action)
+                   move=((1, 0), action)
                 elif(action=="right"):
-                    move=((0, 1), action)
+                   move=((0, 1), action)
                 elif(action=="left"):
-                    move=((0, -1), action)
+                   move=((0, -1), action)
 
                 self.current_state, _ =current_state.apply_move(move)
                 current_state = self.current_state

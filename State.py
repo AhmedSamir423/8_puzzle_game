@@ -246,7 +246,7 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
 #initial_state = State(initial_board)
 #print("Initial Board:")
 #for row in initial_board:
- #   print(row)
+#   print(row)
 
 # # Run searches with metrics
 # print("\nBFS:")
@@ -271,7 +271,7 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
 # initial_state = State(initial_board)
 # print("Initial Board:")
 # for row in initial_board:
-#     print(row)
+ #     print(row)
 
 # # Run searches and print paths
 # solution_path_bfs =  bfs_with_metrics(initial_state)
