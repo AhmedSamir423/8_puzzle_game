@@ -252,7 +252,7 @@ def print_metrics(path, nodes_expanded, search_depth, start_time, end_time):
 
         
 
-initial_board = generate_initial_board()
+initial_board = [[1,2,3],[4,5,6],[7,8,0]]
 initial_state = State(initial_board)
 print("Initial Board:")
 for row in initial_board:
