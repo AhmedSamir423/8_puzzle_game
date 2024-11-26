@@ -19,7 +19,7 @@ class PuzzleGUI:
 
 
     def generate_initial_state(self):
-        initial_board = generate_initial_board()
+        initial_board = [[3,1,2],[4,8,0],[6,5,7]]
         self.current_state = State(initial_board)
         self.update_grid()
         print("Initial Board:")
@@ -62,6 +62,7 @@ class PuzzleGUI:
             
             # Reset the current state to the initial state for displaying the solution
             current_state = self.current_state
+            #312 645 078
             
             for action in path:
                 # Apply each move to the current state and update the grid
